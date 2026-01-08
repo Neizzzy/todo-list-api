@@ -20,6 +20,7 @@ DELETE `/api/tasks/{id}`
 1. Склонируйте проект, создайте файл .env и скопируйте туда данные из .env.example.
 2. Выполните команду `composer install`.
 3. Выполните миграцию `php artisan migrate`.
-4. Запустите сервер командой `php artisan serve`
+4. Можете выполнить сидер `php artisan db:seed`.
+5. Запустите сервер командой `php artisan serve`.
 
 
