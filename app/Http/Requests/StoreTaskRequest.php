@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\TaskStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTaskRequest extends FormRequest
 {
@@ -24,12 +26,14 @@ class StoreTaskRequest extends FormRequest
         return [
             'title' => 'required|string|max:255|unique:tasks,title',
             'description' => 'nullable|string',
-            'status' => 'required|string|max:255',
+            'status' => ['required', Rule::enum(TaskStatus::class)],
         ];
     }
 
     public function messages(): array
     {
+        $taskStatuses = TaskStatus::valuesAsString();
+
         return [
             'title.required' => 'Title is required!',
             'title.string' => 'Title must be string!',
@@ -37,8 +41,7 @@ class StoreTaskRequest extends FormRequest
             'title.unique' => 'Title already exists',
             'description.string' => 'Description should be string!',
             'status.required' => 'Status is required!',
-            'status.string' => 'Status should be string!',
-            'status.max' => 'Status is too long',
+            'status.enum' => "Invalid status! Valid statuses are: $taskStatuses",
         ];
     }
 }
