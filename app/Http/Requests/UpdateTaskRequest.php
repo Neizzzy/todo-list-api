@@ -24,9 +24,23 @@ class UpdateTaskRequest extends FormRequest
         $taskId = $this->route('task') ? $this->route('task')->id : null;
 
         return [
-            'title' => "required|max:255|unique:tasks,title,$taskId",
+            'title' => "required|string|max:255|unique:tasks,title,$taskId",
             'description' => 'nullable',
             'status' => 'required|max:255',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Title is required!',
+            'title.string' => 'Title must be string!',
+            'title.max' => 'Title is too long!',
+            'title.unique' => 'Title already exists',
+            'description.string' => 'Description should be string!',
+            'status.required' => 'Status is required!',
+            'status.string' => 'Status should be string!',
+            'status.max' => 'Status is too long',
         ];
     }
 }
