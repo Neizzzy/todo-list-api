@@ -1,6 +1,7 @@
 <?php
 
 use App\DTOs\TaskDto;
+use App\Enums\TaskStatus;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,7 +27,8 @@ class TaskApiTest extends TestCase
 
     public function testApiCreateTask()
     {
-        $data = new TaskDto('title', 'description', 'status');
+        $status = TaskStatus::values()[array_rand(TaskStatus::values())];
+        $data = new TaskDto('title', 'description', $status);
 
         $response = $this->postJson('/api/tasks', $data->toArray());
 
@@ -49,14 +51,25 @@ class TaskApiTest extends TestCase
     public function testApiTaskUniqueValidation()
     {
         $task = Task::factory()->create();
-
-        $data = new TaskDto($task->title, '', 'status');
+        $status = TaskStatus::values()[array_rand(TaskStatus::values())];
+        $data = new TaskDto($task->title, '', $status);
 
         $response = $this->postJson('/api/tasks', $data->toArray());
 
         $response->assertStatus(422);
 
         $this->assertDatabaseCount('tasks', 1);
+    }
+
+    public function testApiTaskStatusEnumValidation()
+    {
+        $data = new TaskDto('task', 'description', 'invalid status');
+
+        $response = $this->postJson('/api/tasks', $data->toArray());
+
+        $response->assertStatus(422);
+
+        $this->assertDatabaseEmpty('tasks');
     }
 
     public function testApiReturnTask()
@@ -76,7 +89,8 @@ class TaskApiTest extends TestCase
     public function testApiUpdateTask()
     {
         $task = Task::factory()->create();
-        $data = new TaskDto("$task->title upd", "$task->description upd", "$task->status upd");
+        $newStatus = TaskStatus::values()[array_rand(TaskStatus::values())];
+        $data = new TaskDto("$task->title upd", "$task->description upd", $newStatus);
 
         $response = $this->putJson("/api/tasks/$task->id", $data->toArray());
 
