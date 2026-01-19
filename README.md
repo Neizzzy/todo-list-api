@@ -15,12 +15,17 @@ DELETE `/api/tasks/{id}`
 * PHP 8.2+
 * Sqlite
 * Composer
+* Make
 
 ## Запуск
-1. Склонируйте проект, создайте файл .env и скопируйте туда данные из .env.example.
-2. Выполните команду `composer install`.
-3. Выполните миграцию `php artisan migrate`.
-4. Можете выполнить сидер `php artisan db:seed`.
-5. Запустите сервер командой `php artisan serve`.
+Выполните команду `make setup`
+
+### Локальный запуск
+* Запустите сервер командой `make start-local`
+
+### Запуск через докер
+* Запустите контейнер `docker-compose up -d`
+
+Сервер будет доступен по `http://localhost:8000` 
 
 
